@@ -8,4 +8,5 @@
         </div>
         <button type="submit">Submit</button>
     </form>
+    <a href="<?php echo route('admin.tintuc',['slug'=> 'code','id'=> 1]) ?>">Tin tuc</a>
 </div>

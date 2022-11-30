@@ -3,7 +3,7 @@
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\HomeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,7 +21,7 @@ Route::get('/', function () {
 
 Route::get('home', function () {
     return view('home');
-});
+})->name('home');
 
 Route::post('home', function () {
     return "Phuong thuc post";
@@ -54,11 +54,56 @@ Route::put('home', function () {
 // Route::view('home','product');
 
 Route::prefix('admin')->group(function() {
+    //lay url
+    Route::get('tintuc/{slug?}-{id?}.html', function ($slug=null,$id=null) {
+        $content ='Path/admin voi tham so ';
+        $content .='id ='.$id.'<br/>';
+        $content .='slug ='.$slug;
+        return $content;
+    })//validex
+    ->where('id','\d+')->where('slug','.+')->name('admin.tintuc');
+    //     [
+    //         //cach khac [a-z]+
+    //         'slug'=>'.+',
+    //         "id"=>'[0-9]+'
+    //     ]
+    // );
+    
+    
+
     Route::get('home', function () {
         return view('home');
     });
-    
+
     Route::post('home', function () {
         return "Phuong thuc post";
     });
 });
+
+//middware
+Route::prefix('admin')->middleware('checkMiddleware')->group(function() {
+    //lay url
+    Route::get('tintuc/{slug?}-{id?}.html', function ($slug=null,$id=null) {
+        $content ='Path/admin voi tham so ';
+        $content .='id ='.$id.'<br/>';
+        $content .='slug ='.$slug;
+        return $content;
+    })//validex
+    ->where('id','\d+')->where('slug','.+')->name('admin.tintuc');
+    
+    
+
+    Route::get('home', function () {
+        return view('home');
+    });
+
+    Route::post('home', function () {
+        return "Phuong thuc post";
+    });
+});
+
+
+//controller ket noi
+Route::get('/','App\Http\Controllers\HomeController@check')->name('home');
+
+Route::get('/danhmuc',[HomeController::class,'getCategory']);
